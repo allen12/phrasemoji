@@ -7,7 +7,7 @@ $("#create_room").click(function() {
 			if (data.id) {
 				$this.text("ready!");
 				$this.attr("disabled", true);
-				$("#room_id").val("http://phrasemoji.me/" + data.id);
+				$("#room_id").val("http://phrasemoji.com/" + data.id);
 				$("#room_group").css({ display: "table" });
 			}
 		});

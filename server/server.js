@@ -63,7 +63,7 @@ app.get("/request_room.json", function(req, res) {
     var id = getRandomURL();
     gameStates[id] = {};
     gameStates[id]["phrase"] = getRandomPhrase();
-    gameStates[id[["finished"] = false;
+    gameStates[id]["finished"] = false;
     console.log(JSON.stringify(gameStates));
     var ret = {
         "id" : id
@@ -117,6 +117,6 @@ var getRandomPhrase = function() {
     return phrases[Math.floor(Math.random() * phrases.length)];
 };
 
-var server = app.listen(8081, function() {
+var server = app.listen(80, function() {
     console.log("Server started.");
 });
