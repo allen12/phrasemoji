@@ -34,7 +34,13 @@
         <h3><span class="text-muted">phras</span><b>emoji</b></h3>
       </div>
 
-      <div class="jumbotron">
+      <div id="j0" class="jumbotron">
+<p>
+	<h4>waiting on other players</h4>
+</p>
+</div>
+
+      <div hidden id="j1" class="jumbotron">
 <p>
 	<h4>translate</h4>
         <p><h3 id="emo_phrase"></h3></p>
@@ -47,6 +53,17 @@
 </div>
 
       </div>
+
+      <div hidden id="j2" class="jumbotron">
+<p>
+	<h4>the phrase was</h4>
+        <p><h3 id="init_phrase"></h3></p>
+	<h4>and was translated to</h4>
+        <p><h3 id="emoj_phrase"></h3></p>
+	<h4>which became</h4>
+        <p><h3 id="guess_phrase"></h3></p>
+</p>
+</div>
 
       <footer class="footer">
         <p>made at <img src="lib/img//blank.gif" class="img" style="display:inline-block;width:25px;height:25px;background:url('lib/img//emoji_spritesheet_0.png') -225px -75px no-repeat;background-size:675px 175px;" alt=":fire:"> by allen, nick, cameron</p>
@@ -77,21 +94,38 @@
         popupButtonClasses: ''
       });
 
-$.get("/get_emoji.json", function(data) {
-	var i = EmojiPicker.prototype.unicodeToImage(data.emoji);
-	$("#emo_phrase").append(i);
-});
+var uri = window.location.href;
+
+        var x = setInterval(function() {
+		$.getJSON(uri + "/get_emoji.json", function(data) {
+			if (data.emoji) {
+				var i = EmojiPicker.prototype.unicodeToImage(data.emoji);
+				$("#emo_phrase").append(i);
+	                        clearInterval(x);
+				$("#j1").show();
+				$("#j0").hide();
+			}
+		});
+        }, 2000);
 
 $("#sub_btn").click(function() {
-	$.post("/update_text.json", { text: $("#entry").val() });
+$.ajax({
+    type: 'POST',
+    url: uri + '/update_text',
+    data: JSON.stringify({text: $("#entry").val()}),
+    contentType: "application/json",
+    dataType: 'json'
+});
         $(this).text("waiting...");
         var x = setInterval(function() {
-                $.get("/get_results.json", function(data) {
+                $.getJSON(uri + "/get_results.json", function(data) {
                         if (data.finished) {
                                 clearInterval(x);
                                 $("#init_phrase").text('"' + data.phrase + '"');
                                 $("#emoj_phrase").html(EmojiPicker.prototype.unicodeToImage(data.emoji));
                                 $("#guess_phrase").text(data.text);
+				$("#j2").show();
+				$("#j1").hide();
                         }
                 });
         }, 2000);

@@ -29,7 +29,13 @@ app.get("/", function(req, res) {
 
 //Actual game page
 app.get("/[a-z]{4}\\\\?", function(req, res) {
-    res.sendFile("test.html", { root: __dirname + "/../frontend" });
+    var path = url.parse(req.url).pathname;
+    var game = path.split("/")[1];
+    if (gameStates[game]["first_entered"]) {
+    	res.sendFile("test2.html", { root: __dirname + "/../frontend" });
+    } else {
+    	res.sendFile("test.html", { root: __dirname + "/../frontend" });
+    }
 });
 
 app.get("/[a-z]{4}/get_phrase.json", function(req, res) {
@@ -38,6 +44,7 @@ app.get("/[a-z]{4}/get_phrase.json", function(req, res) {
     var ret = {
         "phrase" : gameStates[game]["phrase"]
     };
+    gameStates[game]["first_entered"] = true;
     res.send(JSON.stringify(ret));
 });
 
@@ -64,6 +71,7 @@ app.get("/request_room.json", function(req, res) {
     gameStates[id] = {};
     gameStates[id]["phrase"] = getRandomPhrase();
     gameStates[id]["finished"] = false;
+    gameStates[id]["first_entered"] = false;
     console.log(JSON.stringify(gameStates));
     var ret = {
         "id" : id
@@ -79,7 +87,9 @@ app.get("/[a-z]{4}/get_results.json", function(req, res) {
 
 app.post("/[a-z]{4}/update_emoji", function(req, res) {
     var path = url.parse(req.url).pathname;
-    console.log("update emoji from url: %s", path);
+console.log(req);
+console.log(res);
+    console.log("update emoji from url: %s with ", path, req.body.emoji);
     var game = path.split("/")[1];
     console.log("game ID: %s", game);
     gameStates[game]["emoji"] = req.body.emoji;
