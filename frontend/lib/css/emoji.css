@@ -52,6 +52,7 @@ img.emoji {
     position: relative;
 }
 
+/*
 .emoji-picker-icon {
     position: absolute;
     right: 10px;
@@ -75,6 +76,7 @@ img.emoji {
 .emoji-picker-icon:hover {
     opacity: 1;
 }
+*/
 
 /* Emoji area */
 .emoji-wysiwyg-editor:empty:before {

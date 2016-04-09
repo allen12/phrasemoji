@@ -18,5 +18,4 @@ $("#go").click(function() {
 
 $("#btn-back").click(function() {
 $("div.emoji-input").children().last().remove();
-
 });

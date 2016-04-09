@@ -229,11 +229,11 @@
 	};
 
 	EmojiArea.prototype.setupButton = function() {
+alert("Hello world");
 		var self = this;
 		var $button = $('[data-id=' + this.id + '][data-type=picker]');
 
-    $("#nom").on('click', function(e) {
-console.log("hi");
+    $("#nom").click(function(e) {
       self.emojiMenu.show(self);
 		});
 
@@ -346,7 +346,7 @@ console.log("hi");
 			'data-id': id,
 			'data-type': 'input',
 			'placeholder': $textarea.attr('placeholder'),
-			'contenteditable': 'true',
+			'contenteditable': 'false',
 		});
 
 		/*
@@ -378,10 +378,8 @@ console.log("hi");
       }
       self.updateBodyPadding(editorDiv);
     });
-/*
 
-    $textarea.after("<i class='emoji-picker-icon emoji-picker " + this.options.popupButtonClasses + "' data-id='" + id + "' data-type='picker'></i>");
-*/
+    $("#nom").addClass("emoji-picker-icon emoji-picker " + this.options.popupButtonClasses).attr({ "data-id": id, "data-type": "picker"});
 
 		$textarea.hide().after(this.$editor);
 		this.setup();
@@ -426,14 +424,14 @@ console.log("hi");
 		if (this.options.inputMethod == 'unicode') {
 			insertionContent = this.emojiPopup.colonToUnicode(emoji);
 		} else {
-			$(".emoji-input").attr({"contenteditable": false});
 			var $img = $(EmojiArea.createIcon($.emojiarea.icons[emoji]));
 			if ($img[0].attachEvent) {
 				$img[0].attachEvent('onresizestart', function(e) {
 					e.returnValue = false;
 				}, false);
 			}
-			insertionContent = $img[0];
+			/*insertionContent = $img[0];*/
+			$("div.emoji-input").append($img);
 		}
 
 		this.$editor.trigger('focus');
@@ -450,7 +448,6 @@ console.log("hi");
 		 * save recent emojis
 		 */
 		util.emojiInserted(emoji, this.menu);
-			$(".emoji-input").attr({"contenteditable": false});
 
 		this.onChange();
 	};
