@@ -32,13 +32,13 @@ app.get("/[a-z]{4}\\\\?", function(req, res) {
     res.send("this is the game!");
 });
 
-app.get("/[a-z]{4}/get_text", function(req, res) {
+app.get("/[a-z]{4}/get_text.json", function(req, res) {
     var path = url.parse(req.url).pathname;
     var game = path.split("/")[1];
     res.send(gameStates[game]["text"]);
 });
 
-app.get("/[a-z]{4}/get_emoji", function(req, res) {
+app.get("/[a-z]{4}/get_emoji.json", function(req, res) {
     var path = url.parse(req.url).pathname;
     var game = path.split("/")[1];
     res.send(gameStates[game]["emoji"]);
