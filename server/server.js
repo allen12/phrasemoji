@@ -31,6 +31,10 @@ app.get("/*/get_emoji", function(req, res) {
     res.send(gameStates[game]["emoji"]);
 });
 
+app.get("/request_room.json", function(req, res) {
+    res.send("{\"id:\"" +  getRandomURL() + "\"}");
+});
+
 app.post("/*/update_emoji", function(req, res) {
     var path = url.parse(req.url).pathname;
     console.log("update emoji from url: %s", path);
@@ -50,6 +54,17 @@ app.post("/*/update_text", function(req, res) {
     console.log(JSON.stringify(gameStates));
     res.send("Emoji updated\n");
 });
+
+var getRandomURL = function() {
+    var text = "";
+    var possible = "abcdefghhijklmnopqrstuvwxyz";
+    
+    for (var i = 0; i < 4; ++i) {
+        text += possible.charAt(Math.floor(Math.random() * possible.length));
+    }
+
+    return text;
+};
 
 var server = app.listen(8081, function() {
     console.log("Server started.");
