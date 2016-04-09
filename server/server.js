@@ -29,7 +29,7 @@ app.get("/", function(req, res) {
 
 //Actual game page
 app.get("/[a-z]{4}\\\\?", function(req, res) {
-    res.send("this is the game!");
+    res.sendFile("test.html", { root: __dirname + "/../frontend" });
 });
 
 app.get("/[a-z]{4}/get_phrase.json", function(req, res) {
