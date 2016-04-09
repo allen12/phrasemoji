@@ -37,7 +37,7 @@
       <div id="j1" class="jumbotron">
 <p>
 	<h4>translate</h4>
-        <p><h3>"The quick brown fox jumps over the lazy dog"</h3></p>
+        <p><h3 id="phrase_entry"></h3></p>
 	<h4>into emoji</h4>
 </p>
 <br />
@@ -104,6 +104,27 @@
       window.emojiPicker.discover();
 
       $("div.emoji-input").css({ width: "80%" });
+
+      $.get("/get_phrase.json", function(data) {
+	  $("#phrase_entry").text(data.phrase);
+      });
+
+$("#sub_btn").click(function() {
+	$.post("/update_emoji.json", { emoji: $(".emoji-input").val() });
+        $(this).text("waiting on other players...");
+        var x = setInterval(function() {
+                $.get("/get_results.json", function(data) {
+                        if (data.finished) {
+                                clearInterval(x);
+                                $("#init_phrase").text('"' + data.phrase + '"');
+                                $("#emoj_phrase").html(EmojiPicker.prototype.unicodeToImage(data.emoji));
+                                $("#guess_phrase").text(data.text);
+                        }
+                });
+        }, 2000);
+});
+
+
 });
   </script>
   </body>

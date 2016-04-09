@@ -42,7 +42,7 @@
 </p>
 <br />
 <div class="input-group">
-  <input type="text" class="form-control" />
+  <input id="entry" type="text" class="form-control" />
   <button id="sub_btn" type="button" class="btn btn-default navbar-btn">Submit</button>
 </div>
 
@@ -77,8 +77,25 @@
         popupButtonClasses: ''
       });
 
-var i = EmojiPicker.prototype.unicodeToImage("🐨");
-$("#emo_phrase").append(i);
+$.get("/get_emoji.json", function(data) {
+	var i = EmojiPicker.prototype.unicodeToImage(data.emoji);
+	$("#emo_phrase").append(i);
+});
+
+$("#sub_btn").click(function() {
+	$.post("/update_text.json", { text: $("#entry").val() });
+        $(this).text("waiting...");
+        var x = setInterval(function() {
+                $.get("/get_results.json", function(data) {
+                        if (data.finished) {
+                                clearInterval(x);
+                                $("#init_phrase").text('"' + data.phrase + '"');
+                                $("#emoj_phrase").html(EmojiPicker.prototype.unicodeToImage(data.emoji));
+                                $("#guess_phrase").text(data.text);
+                        }
+                });
+        }, 2000);
+});
   </script>
   </body>
 
