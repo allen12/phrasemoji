@@ -2,8 +2,7 @@ $("#create_room").click(function() {
 	var $this = $(this);
 	$this.text("waiting...");
 
-	/* TODO: change GET to POST */
-	$.get("/request_room.json", function(data) {
+	$.getJSON("/request_room.json", function(data) {
 		if (data.id) {
 			$this.text("ready!");
 			$("#room_id").val("http://transloj.me/" + data.id + ".html");
