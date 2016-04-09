@@ -15,17 +15,17 @@ app.get("/", function(req, res) {
 });
 
 //Actual game page
-app.get("/*", function(req, res) {
+app.get("/[a-z]{4}\\\\?", function(req, res) {
     res.send("this is the game!");
 });
 
-app.get("/*/get_text", function(req, res) {
+app.get("/[a-z]{4}/get_text", function(req, res) {
     var path = url.parse(req.url).pathname;
     var game = path.split("/")[1];
     res.send(gameStates[game]["text"]);
 });
 
-app.get("/*/get_emoji", function(req, res) {
+app.get("/[a-z]{4}/get_emoji", function(req, res) {
     var path = url.parse(req.url).pathname;
     var game = path.split("/")[1];
     res.send(gameStates[game]["emoji"]);
@@ -35,7 +35,7 @@ app.get("/request_room.json", function(req, res) {
     res.send("{\"id:\"" +  getRandomURL() + "\"}");
 });
 
-app.post("/*/update_emoji", function(req, res) {
+app.post("/[a-z]{4}/update_emoji", function(req, res) {
     var path = url.parse(req.url).pathname;
     console.log("update emoji from url: %s", path);
     var game = path.split("/")[1];
@@ -45,14 +45,14 @@ app.post("/*/update_emoji", function(req, res) {
     res.send("Emoji updated\n");
 });
 
-app.post("/*/update_text", function(req, res) {
+app.post("/[a-z]{4}/update_text", function(req, res) {
     var path = url.parse(req.url).pathname;
     console.log("update text from url: %s", path);
     var game = path.split("/")[1];
     console.log("game ID: %s", game);
     gameStates[game]["text"] = req.body.text;
     console.log(JSON.stringify(gameStates));
-    res.send("Emoji updated\n");
+    res.send("Text updated\n");
 });
 
 /*
