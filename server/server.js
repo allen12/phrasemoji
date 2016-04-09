@@ -8,10 +8,7 @@ app.use(bodyParser.json());
 
 //First page with url assignment
 app.get("/", function(req, res) {
-    game = "abcd";
-    res.send("Your unique url is: ");
-    gameStates[game] = {};
-    console.log(JSON.stringify(gameStates));
+    res.send("Welcome to Translog.me");
 });
 
 //Actual game page
@@ -32,7 +29,10 @@ app.get("/*/get_emoji", function(req, res) {
 });
 
 app.get("/request_room.json", function(req, res) {
-    res.send("{\"id:\"" +  getRandomURL() + "\"}");
+    var id = getRandomURL();
+    gameStates[id] = {};
+    console.log(JSON.stringify(gameStates));
+    res.send("{\"id:\"" + id  + "\"}");
 });
 
 app.post("/*/update_emoji", function(req, res) {
