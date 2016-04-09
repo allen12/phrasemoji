@@ -1,14 +1,31 @@
 var url = require("url");
 var express = require("express");
 var bodyParser = require("body-parser");
+var path = require('path');
+
 var app = express();
+var phrases = ["There's no such thing as a free lunch", 
+"The pen is mightier than the sword",
+"Keep your friends close and your enemies closer",
+"There's no such thing as a free lunch",
+"There's no place like home",
+"The early bird catches the worm",
+"Actions speak louder than words",
+"Don't bite the hand that feeds you",
+"There's no time like the present",
+"A penny saved is a penny earned",
+"You can't judge a book by its cover",
+"Two heads are better than one",
+"A chain is only as strong as its weakest link",
+"You can lead a horse to water, but you can't make him drink"]
 
 var gameStates = {};
 app.use(bodyParser.json());
+app.use(express.static(path.resolve("../frontend")));
 
 //First page with url assignment
 app.get("/", function(req, res) {
-    res.send("Welcome to Translog.me");
+    res.sendFile("/test.html");
 });
 
 //Actual game page
@@ -32,6 +49,7 @@ app.get("/request_room.json", function(req, res) {
     var id = getRandomURL();
     gameStates[id] = {};
     console.log(JSON.stringify(gameStates));
+    gameStates[id]["phrase"] = getRandomPhrase();
     res.send("{\"id:\"" + id  + "\"}");
 });
 
@@ -68,6 +86,10 @@ var getRandomURL = function() {
     }
 
     return text;
+};
+
+var getRandomPhrase = function() {
+    return phrases[Math.floor(Math.random() * phrases.length)];
 };
 
 var server = app.listen(8081, function() {
