@@ -55,6 +55,10 @@ app.post("/*/update_text", function(req, res) {
     res.send("Emoji updated\n");
 });
 
+/*
+ * Obtain a random string of four lowercase alpha characters.
+ * Use intended for URL generation for a room.
+ */
 var getRandomURL = function() {
     var text = "";
     var possible = "abcdefghhijklmnopqrstuvwxyz";
