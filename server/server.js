@@ -6,11 +6,29 @@ var app = express();
 var gameStates = {};
 app.use(bodyParser.json());
 
+//First page with url assignment
 app.get("/", function(req, res) {
     game = "abcd";
     res.send("Your unique url is: ");
     gameStates[game] = {};
     console.log(JSON.stringify(gameStates));
+});
+
+//Actual game page
+app.get("/*", function(req, res) {
+    res.send("this is the game!");
+});
+
+app.get("/*/get_text", function(req, res) {
+    var path = url.parse(req.url).pathname;
+    var game = path.split("/")[1];
+    res.send(gameStates[game]["text"]);
+});
+
+app.get("/*/get_emoji", function(req, res) {
+    var path = url.parse(req.url).pathname;
+    var game = path.split("/")[1];
+    res.send(gameStates[game]["emoji"]);
 });
 
 app.post("/*/update_emoji", function(req, res) {
