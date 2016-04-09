@@ -32,6 +32,12 @@ app.get("/[a-z]{4}\\\\?", function(req, res) {
     res.send("this is the game!");
 });
 
+app.get("/[a-z]{4}/get_phrase.json", function(req, res) {
+    var path = url.parse(req.url).pathname;
+    var game = path.split("/")[1];
+    res.send(gameStates[game]["phrase"]);
+});
+
 app.get("/[a-z]{4}/get_text.json", function(req, res) {
     var path = url.parse(req.url).pathname;
     var game = path.split("/")[1];
@@ -52,7 +58,7 @@ app.get("/request_room.json", function(req, res) {
     res.send("{\"id:\"" + id  + "\"}");
 });
 
-app.get("/[a-z]{4}/results.json", function(req, res) {
+app.get("/[a-z]{4}/get_results.json", function(req, res) {
     var path = url.parse(req.url).pathname;
     var game = path.split("/")[1];
     res.send(JSON.stringify(gameStates[game]));
