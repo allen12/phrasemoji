@@ -7,7 +7,6 @@ var app = express();
 var phrases = ["There's no such thing as a free lunch", 
 "The pen is mightier than the sword",
 "Keep your friends close and your enemies closer",
-"There's no such thing as a free lunch",
 "There's no place like home",
 "The early bird catches the worm",
 "Actions speak louder than words",
@@ -51,6 +50,12 @@ app.get("/request_room.json", function(req, res) {
     console.log(JSON.stringify(gameStates));
     gameStates[id]["phrase"] = getRandomPhrase();
     res.send("{\"id:\"" + id  + "\"}");
+});
+
+app.get("/[a-z]{4}/results.json", function(req, res) {
+    var path = url.parse(req.url).pathname;
+    var game = path.split("/")[1];
+    res.send(JSON.stringify(gameStates[game]));
 });
 
 app.post("/[a-z]{4}/update_emoji", function(req, res) {
