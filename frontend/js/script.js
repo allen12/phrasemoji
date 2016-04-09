@@ -30,9 +30,9 @@ $("#sub_btn").click(function() {
 		$.get("/get_results.json", function(data) {
 			if (data.finished) {
 				clearInterval(x);
-				$("#init_phrase").text('"' + data.init + '"');
-				$("#emoj_phrase").html(EmojiPicker.prototype.unicodeToImage(data.emoj));
-				$("#guess_phrase").text(data.guess);
+				$("#init_phrase").text('"' + data.phrase + '"');
+				$("#emoj_phrase").html(EmojiPicker.prototype.unicodeToImage(data.emoji));
+				$("#guess_phrase").text(data.text);
 			}
 		});
 	}, 2000);
