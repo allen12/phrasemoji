@@ -24,7 +24,7 @@ app.use(express.static(path.resolve("../frontend")));
 
 //First page with url assignment
 app.get("/", function(req, res) {
-    res.sendFile("/test.html");
+    //res.sendFile("/test.html");
 });
 
 //Actual game page
@@ -63,6 +63,7 @@ app.get("/request_room.json", function(req, res) {
     var id = getRandomURL();
     gameStates[id] = {};
     gameStates[id]["phrase"] = getRandomPhrase();
+    gameStates[id[["finished"] = false;
     console.log(JSON.stringify(gameStates));
     var ret = {
         "id" : id
@@ -92,6 +93,7 @@ app.post("/[a-z]{4}/update_text", function(req, res) {
     var game = path.split("/")[1];
     console.log("game ID: %s", game);
     gameStates[game]["text"] = req.body.text;
+    gameStates[game]["finished"] = true;
     console.log(JSON.stringify(gameStates));
     res.send("Text updated\n");
 });
