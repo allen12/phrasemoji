@@ -43,10 +43,10 @@
 <br />
 
         <div class="input-group emoji-picker-container">
-            <textarea class="form-control textarea-control" rows="10" data-emojiable="true"></textarea>
-  <div class="input-group-btn">
-        <button id="btn-back" class="btn btn-default" type="button">&#x232B;</button>
-        <button id="nom" class="btn btn-default" type="button">&nbsp;&nbsp;&nbsp;</button>
+            <textarea class="emoji-input form-control textarea-control" rows="10" data-emojiable="true"></textarea>
+  <div class="input-group-btn btn-group-vertical">
+        <button id="btn-back" class="btn btn-default" style="width: 50px;" type="button">&#x232B;</button>
+        <button id="nom" class="btn btn-default" style="width: 50px;" type="button">&nbsp;&nbsp;&nbsp;</button>
   </div>
 </div>
         </p>
@@ -87,7 +87,7 @@
       // It can be called as many times as necessary; previously converted input fields will not be converted again
       window.emojiPicker.discover();
 
-      $(".emoji-input").attr({ "contenteditable" : "false" });
+      /*$("div.emoji-input").attr({ "contenteditable" : "false" });*/
 });
   </script>
   </body>
