@@ -35,19 +35,28 @@ app.get("/[a-z]{4}\\\\?", function(req, res) {
 app.get("/[a-z]{4}/get_phrase.json", function(req, res) {
     var path = url.parse(req.url).pathname;
     var game = path.split("/")[1];
-    res.send(gameStates[game]["phrase"]);
+    var ret = {
+        "phrase" : gameStates[game]["phrase"]
+    };
+    res.send(JSON.stringify(ret));
 });
 
 app.get("/[a-z]{4}/get_text.json", function(req, res) {
     var path = url.parse(req.url).pathname;
     var game = path.split("/")[1];
-    res.send(gameStates[game]["text"]);
+    var ret = {
+        "text" : gameStates[game]["text"]
+    };
+    res.send(JSON.stringify(ret));
 });
 
 app.get("/[a-z]{4}/get_emoji.json", function(req, res) {
     var path = url.parse(req.url).pathname;
     var game = path.split("/")[1];
-    res.send(gameStates[game]["emoji"]);
+    var ret = {
+        "emoji" : gameStates[game]["emoji"]
+    };
+    res.send(JSON.stringify(ret));
 });
 
 app.get("/request_room.json", function(req, res) {
@@ -55,7 +64,10 @@ app.get("/request_room.json", function(req, res) {
     gameStates[id] = {};
     gameStates[id]["phrase"] = getRandomPhrase();
     console.log(JSON.stringify(gameStates));
-    res.send("{\"id\":\"" + id  + "\"}");
+    var ret = {
+        "id" : id
+    };
+    res.send(JSON.stringify(ret));
 });
 
 app.get("/[a-z]{4}/get_results.json", function(req, res) {
