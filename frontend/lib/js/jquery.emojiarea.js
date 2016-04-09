@@ -229,7 +229,6 @@
 	};
 
 	EmojiArea.prototype.setupButton = function() {
-alert("Hello world");
 		var self = this;
 		var $button = $('[data-id=' + this.id + '][data-type=picker]');
 

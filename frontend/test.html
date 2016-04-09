@@ -28,13 +28,13 @@
       <div class="header clearfix">
         <nav>
           <ul class="nav nav-pills pull-right">
-            <li role="presentation" class="active"><a href="#">Home</a></li>
+            <li role="presentation" class="active"><a href="/">Home</a></li>
           </ul>
         </nav>
-        <h3 class="text-muted">transloj.me</h3>
+        <h3><span class="text-muted">phras</span><b>emoji</b></h3>
       </div>
 
-      <div class="jumbotron">
+      <div id="j1" class="jumbotron">
 <p>
 	<h4>translate</h4>
         <p><h3>"The quick brown fox jumps over the lazy dog"</h3></p>
@@ -43,17 +43,33 @@
 <br />
 
         <div class="input-group emoji-picker-container">
+<div style="height: 8em;">
             <textarea class="emoji-input form-control textarea-control" rows="10" data-emojiable="true"></textarea>
-  <div class="input-group-btn btn-group-vertical">
-        <button id="btn-back" class="btn btn-default" style="width: 50px;" type="button">&#x232B;</button>
-        <button id="nom" class="btn btn-default" style="width: 50px;" type="button">&nbsp;&nbsp;&nbsp;</button>
-  </div>
+	  <div class="input-group-btn btn-group-vertical">
+	        <button id="btn-back" class="btn btn-default" type="button" style="height: 50px;">&#x232B;</button>
+	        <button id="nom" class="btn btn-default" type="button"><span style="font-size: 25px;">&#x263A;</span></button>
+	  </div>
+</div>
+  <button id="sub_btn" type="button" class="btn btn-default navbar-btn">Submit</button>
+</div>
+        </p>
+      </div>
+
+      <div hidden id="j2" class="jumbotron">
+<p>
+	<h4>the phrase was</h4>
+        <p><h3 id="init_phrase"></h3></p>
+	<h4>and was translated to</h4>
+        <p><h3 id="emoj_phrase"></h3></p>
+	<h4>which became</h4>
+        <p><h3 id="guess_phrase"></h3></p>
+</p>
 </div>
         </p>
       </div>
 
       <footer class="footer">
-        <p>allen, nick, cameron</p>
+        <p>made at <img src="lib/img//blank.gif" class="img" style="display:inline-block;width:25px;height:25px;background:url('lib/img//emoji_spritesheet_0.png') -225px -75px no-repeat;background-size:675px 175px;" alt=":fire:"> by allen, nick, cameron</p>
       </footer>
 
     </div> <!-- /container -->
@@ -62,7 +78,6 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
     <!-- Include all compiled plugins (below), or include individual files as needed -->
     <script src="js/bootstrap.min.js"></script>
-    <script src="js/script.js"></script>
 
 
   <!-- Begin emoji-picker JavaScript -->
@@ -72,6 +87,7 @@
   <script src="lib/js/util.js"></script>
   <script src="lib/js/jquery.emojiarea.js"></script>
   <script src="lib/js/emoji-picker.js"></script>
+    <script src="js/script.js"></script>
   <!-- End emoji-picker JavaScript -->
 
   <script>
@@ -80,14 +96,14 @@
       window.emojiPicker = new EmojiPicker({
         emojiable_selector: '[data-emojiable=true]',
         assetsPath: 'lib/img/',
-        popupButtonClasses: 'fa fa-smile-o'
+        popupButtonClasses: ''
       });
       // Finds all elements with `emojiable_selector` and converts them to rich emoji input fields
       // You may want to delay this step if you have dynamically created input fields that appear later in the loading process
       // It can be called as many times as necessary; previously converted input fields will not be converted again
       window.emojiPicker.discover();
 
-      /*$("div.emoji-input").attr({ "contenteditable" : "false" });*/
+      $("div.emoji-input").css({ width: "80%" });
 });
   </script>
   </body>
