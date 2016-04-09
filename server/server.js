@@ -53,9 +53,9 @@ app.get("/[a-z]{4}/get_emoji.json", function(req, res) {
 app.get("/request_room.json", function(req, res) {
     var id = getRandomURL();
     gameStates[id] = {};
-    console.log(JSON.stringify(gameStates));
     gameStates[id]["phrase"] = getRandomPhrase();
-    res.send("{\"id:\"" + id  + "\"}");
+    console.log(JSON.stringify(gameStates));
+    res.send("{\"id\":\"" + id  + "\"}");
 });
 
 app.get("/[a-z]{4}/get_results.json", function(req, res) {
