@@ -134,6 +134,7 @@ app.post("/[a-z]{4}/send_response", function(req, res) {
     var id = gameStates[game]["turn"];
     gameStates[game]["players"][id]["response"] = req.body.response;
     gameStates[game]["turn"]++;
+    res.send("");
 });
 
 var removeGame = function(game) {
