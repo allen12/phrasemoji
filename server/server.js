@@ -24,7 +24,10 @@ var phrases = ["There's no such thing as a free lunch",
 "An apple a day keeps the doctors away",
 "April showers bring May flowers",
 "Somewhere over the rainbow",
-"The grass is always greener on the other side"]
+"The grass is always greener on the other side",
+"You cannot open a book without learning",
+"Silence is a friend who never betrays",
+"When anger rises, think of the consequences",]
 
 var gameStates = {};
 app.use(bodyParser.json());
@@ -115,7 +118,7 @@ app.post("/request_room.json", function(req, res) {
 });
 
 app.post("/[a-z]{4}/join", function(req, res) {
-    game = get_url(req.url);
+    var game = get_url(req.url);
     var handle = req.body.handle;
     var id = gameStates[game]["num_players"];
     gameStates[game]["players"][id] = {"handle" : handle};
@@ -132,6 +135,7 @@ app.post("/[a-z]{4}/join", function(req, res) {
 });
 
 app.post("/[a-z]{4}/send_response", function(req, res) {
+    var game = get_url(req.url);
     var id = gameStates[game]["turn"];
     gameStates[game]["players"][id]["response"] = req.body.response;
     console.log("Revieved response from %d: %s", id, req.body.response);
