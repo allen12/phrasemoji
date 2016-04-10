@@ -115,7 +115,7 @@ app.post("/request_room.json", function(req, res) {
 });
 
 app.post("/[a-z]{4}/join", function(req, res) {
-    game = get_url(req.url);
+    var game = get_url(req.url);
     var handle = req.body.handle;
     var id = gameStates[game]["num_players"];
     gameStates[game]["players"][id] = {"handle" : handle};
