@@ -22,18 +22,17 @@ var gameStates = {};
 app.use(bodyParser.json());
 app.use(express.static(path.resolve("../frontend")));
 
-//First page with url assignment
-app.get("/", function(req, res) {
-    //res.sendFile("/test.html");
-});
-
 app.get("/about", function(req, res) {
     res.sendFile("about.html", { root: __dirname + "/../frontend" });
 });
 
 //Actual game page
 app.get("/[a-z]{4}\\\\?", function(req, res) {
-    res.sendFile("game.html", { root: __dirname + "/../frontend" });
+    game = get_url(req.url);
+    if(checkValidGame(game))
+        res.sendFile("nogame.html", { root: __dirname + "/../frontend" });
+    else
+        res.sendFile("game.html", { root: __dirname + "/../frontend" });
 });
 
 app.get("/[a-z]{4}/get_response.json", function(req, res) {
@@ -63,11 +62,12 @@ app.get("/[a-z]{4}/get_players.json", function(req, res) {
 app.get("/[a-z]{4}/get_results.json", function(req, res) {
     game = get_url(req.url);
     var ret = {
-        "results" : gameStates[game]["players"]
+        "results" : gameStates[game]["players"],
+        "phrase" : gameStates[game]["phrase"]
     }
     res.send(JSON.stringify(ret));
-    gameStates[game]["turns"]--;
-    if(gameStates[game]["turns"] == 0){
+    gameStates[game]["deathCounter"]--;
+    if(gameStates[game]["deathCounter"] == 0){
         removeGame(game); 
     }
 });
@@ -97,6 +97,7 @@ app.post("/request_room.json", function(req, res) {
     gameStates[url]["finished"] = false;
     gameStates[url]["size"] = size;
     gameStates[url]["num_players"] = 0;
+    gameStates[url]["deathCounter"] = gameStates[url]["size"];
     gameStates[url].players = [];
     console.log(JSON.stringify(gameStates));
     var ret = {
@@ -130,6 +131,13 @@ app.post("/[a-z]{4}/send_response", function(req, res) {
 var removeGame = function(game) {
     gameStates[game] = null;
     delete gameStates[game];
+    console.log("removed game: %s", game);
+}
+
+var checkValidGame = function(game) {
+    if(!gameStates[game]) {
+        return "nogame.html";
+    }
 }
 
 var get_url = function(x) {
