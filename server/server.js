@@ -25,8 +25,9 @@ var phrases = ["There's no such thing as a free lunch",
 "April showers bring May flowers",
 "Somewhere over the rainbow",
 "The grass is always greener on the other side",
-"You cannot open a book without learning.",
-"Silence is a friend who never betrays",]
+"You cannot open a book without learning",
+"Silence is a friend who never betrays",
+"When anger rises, think of the consequences",]
 
 var gameStates = {};
 app.use(bodyParser.json());
