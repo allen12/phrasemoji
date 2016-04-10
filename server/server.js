@@ -37,7 +37,7 @@ app.get("/about", function(req, res) {
 //Actual game page
 app.get("/[a-z]{4}\\\\?", function(req, res) {
     var game = get_url(req.url);
-    if(!isValidGame(game))
+    if(!isCurrentGame(game))
         res.sendFile("nogame.html", { root: __dirname + "/../frontend" });
     else
         res.sendFile("game.html", { root: __dirname + "/../frontend" });
@@ -143,10 +143,11 @@ var removeGame = function(game) {
 }
 
 //returns
-var isValidGame = function(game) {
-    if(!gameStates[game]) {
-        return "nogame.html";
+var isCurrentGame = function(game) {
+    if(gameStates[game]) {
+        return true;
     }
+    return false;
 }
 
 var get_url = function(x) {
@@ -165,7 +166,7 @@ var getRandomURL = function() {
         for (var i = 0; i < 4; ++i) {
             text += possible.charAt(Math.floor(Math.random() * possible.length));
         }
-    }while(!isValidGame(text));
+    }while(isCurrentGame(text));
 
     return text;
 };
