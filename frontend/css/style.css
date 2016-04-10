@@ -92,17 +92,16 @@ body {
 .input-group {
 width: 100%;
 }
-/*
-section {
-    width: 80%;
-    background: grey
-}
 
+/*
 #lobby {
+    display: inline-block;
     margin-left: 20%;
 }
 
 #mainwindow {
+    display: inline-block;
     width: 20%;
 }
+
 */

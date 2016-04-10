@@ -23,8 +23,7 @@
     <![endif]-->
   </head>
   <body>
-<section>
-<div class="container" id="mainwindow">
+<div class="container">
       <div class="header clearfix">
         <nav>
           <ul class="nav nav-pills pull-right">
@@ -33,8 +32,8 @@
         </nav>
         <h3><span class="text-muted">phras</span><b>emoji</b></h3>
       </div>
-
-      <div id="j0" class="jumbotron">
+<div class="row">
+      <div id="j0" class="col-md-8 jumbotron">
 lobby 
   <input id="handle" type="text" class="form-control" />
 <button id="join" class="btn btn-default" type="button" style="height: 50px;">join</button>
@@ -42,12 +41,12 @@ lobby
 
       </div>
 
-      <div hidden id="jwait" class="jumbotron">
+      <div hidden id="jwait" class="col-md-8 jumbotron">
 waiting
 
       </div>
 
-      <div hidden id="j1" class="jumbotron">
+      <div hidden id="j1" class="col-md-8 jumbotron">
 <p>
 	<h4>translate</h4>
         <p><h3 id="phrase_entry"></h3></p>
@@ -67,7 +66,7 @@ waiting
       </div>
       </div>
 
-      <div hidden id="j2" class="jumbotron">
+      <div hidden id="j2" class="col-md-8 jumbotron">
 <p>
         <h4>translate</h4>
         <p><h3 id="emo_phrase"></h3></p>
@@ -81,7 +80,7 @@ waiting
 
       </div>
 
-      <div hidden id="j3" class="jumbotron">
+      <div hidden id="j3" class="col-md-8 jumbotron">
 results
 <p>
 	<h4>the phrase was</h4>
@@ -92,18 +91,14 @@ results
         <p><h3 id="guess_phrase"></h3></p>
 </p>
 </div>
-      <footer class="footer">
-        <p>made at <img src="lib/img//blank.gif" class="img" style="margin-bottom:8px;display:inline-block;width:25px;height:25px;background:url('lib/img//emoji_spritesheet_0.png') -225px -75px no-repeat;background-size:675px 175px;" alt=":fire:"> by <img src="lib/img//blank.gif" class="img" style="display:inline-block;width:25px;height:25px;background:url('lib/img//emoji_spritesheet_1.png') -675px 0px no-repeat;background-size:725px 100px; margin-bottom: 7px;" alt=":turtle:">s allen, nick, and cameron</p>
-      </footer>
 
-    </div> <!-- /container -->
-
-<div class="container" id="lobby">
-    <h2> Players currently in lobby </h2>
+    <div class="col-md-4" id="lobby">
+    <h4><b> Currently in lobby:</b> </h4>
     <div class="table-responsive">
         <table class="table">
             <thead>
                 <tr>
+                    <th> Position </th>
                     <th> @handle </th>
                 </tr>
             </thead>
@@ -112,7 +107,16 @@ results
         </table>
     </div>
 </div>
-</section>
+</div>
+
+
+      <footer class="footer">
+        <p>made at <img src="lib/img//blank.gif" class="img" style="margin-bottom:8px;display:inline-block;width:25px;height:25px;background:url('lib/img//emoji_spritesheet_0.png') -225px -75px no-repeat;background-size:675px 175px;" alt=":fire:"> by <img src="lib/img//blank.gif" class="img" style="display:inline-block;width:25px;height:25px;background:url('lib/img//emoji_spritesheet_1.png') -675px 0px no-repeat;background-size:725px 100px; margin-bottom: 7px;" alt=":turtle:">s allen, nick, and cameron</p>
+      </footer>
+
+    </div> <!-- /container -->
+
+
     <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
     <!-- Include all compiled plugins (below), or include individual files as needed -->
@@ -275,7 +279,7 @@ $("#join").click(function() {
                 console.log(playerHandles);
                 if (playerHandles.length > currPlayers) {
                     for (var i = currPlayers; i < playerHandles.length && i < maxPlayers; ++i) {
-                        $("#lobbyrows").append("<tr><td>" + playerHandles[i] + "</td></tr>");
+                        $("#lobbyrows").append("<tr><td>" + (i+1) + "</td><td>" + playerHandles[i] + "</td></tr>");
                     }
 
                     currPlayers = playerHandles.length > maxPlayers ? maxPlayers : playerHandles.length;
