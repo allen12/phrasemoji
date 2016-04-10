@@ -78,6 +78,7 @@ app.get("/[a-z]{4}/get_results.json", function(req, res) {
     }
     res.send(JSON.stringify(ret));
     gameStates[game]["deathCounter"]--;
+    console.log("Player finished. %d players left.", gameStates[game]["deathCounter"]);
     if(gameStates[game]["deathCounter"] == 0){
         removeGame(game); 
     }
