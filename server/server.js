@@ -132,6 +132,7 @@ app.post("/[a-z]{4}/join", function(req, res) {
 });
 
 app.post("/[a-z]{4}/send_response", function(req, res) {
+    var game = get_url(req.url);
     var id = gameStates[game]["turn"];
     gameStates[game]["players"][id]["response"] = req.body.response;
     console.log("Revieved response from %d: %s", id, req.body.response);
