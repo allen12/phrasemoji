@@ -34,8 +34,10 @@
         <!--<h1>create room</h1> -->
         <!-- <p class="lead"><input type="text" /></p> -->
         <p>
-number of players
-           <input id="player_num" type="text" >
+Enter number of players:
+           <input id="player_num" type="number" min=0 step=2 style="width:50px" > <br>
+            <p id="err_text" style="font-size:12px"></p>
+            <br>
 <a id="create_room" class="btn btn-lg btn-success" role="button">create room</a>
 </p>
         <p>
@@ -65,9 +67,14 @@ var uri = window.location.href;
 
 $("#create_room").click(function() {
         var $this = $(this);
-        if (!$this.attr("disabled")) {
-                $this.text("waiting...");
 
+        if ($("#player_num").val() % 2 != 0 || $("#player_num").val() <= 0) {
+            $("#err_text").text("Invalid argument. # players must be positive and even.");
+        }
+
+        else if (!$this.attr("disabled")) {
+                $this.text("waiting...");
+                $("#err_text").text("");
 		$.ajax({
 		    type: 'POST',
 		    url: 'request_room.json',
