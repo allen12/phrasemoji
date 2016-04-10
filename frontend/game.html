@@ -34,8 +34,8 @@
       </div>
 <div class="row">
       <div id="j0" class="col-md-8 jumbotron">
-lobby 
-  <input id="handle" type="text" class="form-control" />
+    <p id="lobbytitle"> </p>
+    <input id="handle" type="text" class="form-control" />
 <button id="join" class="btn btn-default" type="button" style="height: 50px;">join</button>
 <ul id="players"></ul>
 
@@ -198,8 +198,6 @@ var DELAY = 300;
                 $.getJSON(uri + "/get_maxPlayers.json", function(data) {
 			maxPlayers = data.maxPlayers;
                 });
-
-
 function activateTurn(x) {
 	$("#j0").hide();
 	$("#jwait").hide();
@@ -265,14 +263,17 @@ $("#join").click(function() {
             dataType: 'json'
         }).done(function(data) {
 		myId = data.id;
+                $("#lobbytitle").html("You have joined the lobby as position #" + (myId+1) + ". The game will start once " + maxPlayers + " players join.");
         });
 });
 
                 $.getJSON(uri + "/get_maxPlayers.json", function(data) {
 			maxPlayers = data.maxPlayers;
+
+                    $("#lobbytitle").html("You have not joined the lobby yet. Enter a @handle below to join. The game will start once " + maxPlayers + " players join.");
+        
                 });
 
-        
         var refreshLobby = setInterval(function() {
             $.getJSON(uri + "/get_players.json", function(data) {
                 var playerHandles = data.players;
