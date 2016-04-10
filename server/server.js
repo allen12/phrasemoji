@@ -16,7 +16,15 @@ var phrases = ["There's no such thing as a free lunch",
 "You can't judge a book by its cover",
 "Two heads are better than one",
 "A chain is only as strong as its weakest link",
-"You can lead a horse to water, but you can't make him drink"]
+"You can lead a horse to water, but you can't make him drink",
+"It's a small world",
+"Over the hill",
+"Put in my two cents",
+"Make love, not war",
+"An apple a day keeps the doctors away",
+"April showers bring May flowers",
+"Somewhere over the rainbow",
+"The grass is always greener on the other side"]
 
 var gameStates = {};
 app.use(bodyParser.json());
@@ -28,15 +36,15 @@ app.get("/about", function(req, res) {
 
 //Actual game page
 app.get("/[a-z]{4}\\\\?", function(req, res) {
-    game = get_url(req.url);
-    if(checkValidGame(game))
+    var game = get_url(req.url);
+    if(!isValidGame(game))
         res.sendFile("nogame.html", { root: __dirname + "/../frontend" });
     else
         res.sendFile("game.html", { root: __dirname + "/../frontend" });
 });
 
 app.get("/[a-z]{4}/get_response.json", function(req, res) {
-    game = get_url(req.url);
+    var game = get_url(req.url);
     var id = req.query.num;
     var ret = {};
     if(id == -1) {
@@ -48,7 +56,7 @@ app.get("/[a-z]{4}/get_response.json", function(req, res) {
 });
 
 app.get("/[a-z]{4}/get_players.json", function(req, res) {
-    game = get_url(req.url);
+    var game = get_url(req.url);
     var handles = [];
     gameStates[game]["players"].forEach(function(p) {
         handles.push(p["handle"]);
@@ -60,7 +68,7 @@ app.get("/[a-z]{4}/get_players.json", function(req, res) {
 });
 
 app.get("/[a-z]{4}/get_results.json", function(req, res) {
-    game = get_url(req.url);
+    var game = get_url(req.url);
     var ret = {
         "results" : gameStates[game]["players"],
         "phrase" : gameStates[game]["phrase"]
@@ -73,7 +81,7 @@ app.get("/[a-z]{4}/get_results.json", function(req, res) {
 });
 
 app.get("/[a-z]{4}/get_turn.json", function(req, res) {
-    game = get_url(req.url);
+    var game = get_url(req.url);
     var ret = {
         "turn" : gameStates[game]["turn"]
     };
@@ -81,7 +89,7 @@ app.get("/[a-z]{4}/get_turn.json", function(req, res) {
 });
 
 app.get("/[a-z]{4}/get_maxPlayers.json", function(req, res) {
-    game = get_url(req.url);
+    var game = get_url(req.url);
     var ret = {
         "maxPlayers" : gameStates[game]["size"]
     };
@@ -134,7 +142,8 @@ var removeGame = function(game) {
     console.log("removed game: %s", game);
 }
 
-var checkValidGame = function(game) {
+//returns
+var isValidGame = function(game) {
     if(!gameStates[game]) {
         return "nogame.html";
     }
@@ -144,6 +153,7 @@ var get_url = function(x) {
     var path = url.parse(x).pathname;
     return path.split("/")[1];
 }
+
 /*
  * Obtain a random string of four lowercase alpha characters.
  * Use intended for URL generation for a room.
@@ -151,10 +161,11 @@ var get_url = function(x) {
 var getRandomURL = function() {
     var text = "";
     var possible = "abcdefghhijklmnopqrstuvwxyz";
-    
-    for (var i = 0; i < 4; ++i) {
-        text += possible.charAt(Math.floor(Math.random() * possible.length));
-    }
+    do{ 
+        for (var i = 0; i < 4; ++i) {
+            text += possible.charAt(Math.floor(Math.random() * possible.length));
+        }
+    }while(!isValidGame(text));
 
     return text;
 };
