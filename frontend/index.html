@@ -36,7 +36,7 @@
         <!-- <p class="lead"><input type="text" /></p> -->
         <p>
 Enter number of players:
-           <input id="player_num" type="number" min=0 step=2 style="width:50px" > <br>
+           <input id="player_num" type="number" min=2 max=10 step=2 style="width:50px" > <br>
             <p id="err_text" style="font-size:12px"></p>
             <br>
 <a id="create_room" class="btn btn-lg btn-success" role="button">create room</a>
@@ -69,8 +69,8 @@ var uri = window.location.href;
 $("#create_room").click(function() {
         var $this = $(this);
 
-        if ($("#player_num").val() % 2 != 0 || $("#player_num").val() <= 0) {
-            $("#err_text").text("Invalid argument. # players must be positive and even.");
+        if ($("#player_num").val() % 2 != 0 || $("#player_num").val() <= 0  || $("#player_num").val() > 10) {
+            $("#err_text").text("Invalid argument. # players must be even and between 2 and 10 players.");
         }
 
         else if (!$this.attr("disabled")) {
