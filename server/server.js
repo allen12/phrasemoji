@@ -27,6 +27,10 @@ app.get("/", function(req, res) {
     //res.sendFile("/test.html");
 });
 
+app.get("/about", function(req, res) {
+    res.sendFile("about.html", { root: __dirname + "/../frontend" });
+});
+
 //Actual game page
 app.get("/[a-z]{4}\\\\?", function(req, res) {
     res.sendFile("game.html", { root: __dirname + "/../frontend" });
