@@ -40,7 +40,7 @@ app.get("/about", function(req, res) {
 //Actual game page
 app.get("/[a-z]{4}\\\\?", function(req, res) {
     var game = get_url(req.url);
-    if(!isCurrentGame(game))
+    if(!isCurrentGame(game) || gameStates[game]["turn"] != -1)
         res.sendFile("nogame.html", { root: __dirname + "/../frontend" });
     else
         res.sendFile("game.html", { root: __dirname + "/../frontend" });
