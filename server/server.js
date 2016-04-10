@@ -119,6 +119,7 @@ app.post("/[a-z]{4}/join", function(req, res) {
     var handle = req.body.handle;
     var id = gameStates[game]["num_players"];
     gameStates[game]["players"][id] = {"handle" : handle};
+    console.log("Player Joined: %s with id %d", handle, id);
     var ret = {
         "id" : id
     };
@@ -133,8 +134,9 @@ app.post("/[a-z]{4}/join", function(req, res) {
 app.post("/[a-z]{4}/send_response", function(req, res) {
     var id = gameStates[game]["turn"];
     gameStates[game]["players"][id]["response"] = req.body.response;
+    console.log("Revieved response from %d: %s", id, req.body.response);
     gameStates[game]["turn"]++;
-    res.send("");
+    res.send({});
 });
 
 var removeGame = function(game) {
