@@ -213,27 +213,35 @@ function endGame(x, phrase) {
 }
 
 $("#sub_btn0").click(function() {
-	$.ajax({
-	    type: 'POST',
-	    url: uri + '/send_response',
-	    data: JSON.stringify({response: $("#plain_entry").val()}),
-	    contentType: "application/json",
-	    dataType: 'json'
-	}).done(function() {
-		endTurn();
-	});
+	var $this = $(this);
+	if (!$this.attr("disabled")) {
+		$this.attr("disabled", true);
+	      $.ajax({
+	            type: 'POST',
+	            url: uri + '/send_response',
+	            data: JSON.stringify({response: $("#plain_entry").val()}),
+	            contentType: "application/json",
+	            dataType: 'json'
+	        }).done(function(data) {
+			endTurn();
+	        });
+	}
 });
 
 $("#sub_btn").click(function() {
-	$.ajax({
-	    type: 'POST',
-	    url: uri + '/send_response',
-	    data: JSON.stringify({response: $(".emoji-input").val()}),
-	    contentType: "application/json",
-	    dataType: 'json'
-	}).done(function() {
-		endTurn();
-	});
+	var $this = $(this);
+	if (!$this.attr("disabled")) {
+		$this.attr("disabled", true);
+	      $.ajax({
+	            type: 'POST',
+	            url: uri + '/send_response',
+	            data: JSON.stringify({response: $(".emoji-input").val()}),
+	            contentType: "application/json",
+	            dataType: 'json'
+	        }).done(function(data) {
+			endTurn();
+	        });
+	}
 });
 
 $("#join").click(function() {
@@ -262,7 +270,6 @@ $("#join").click(function() {
       function refreshLobby() {
             $.getJSON(uri + "/get_players.json", function(data) {
                 var playerHandles = data.players;
-                console.log(playerHandles);
                 if (playerHandles.length > currPlayers) {
                     for (var i = currPlayers; i < playerHandles.length && i < maxPlayers; ++i) {
                         $("#lobbyrows").append("<tr><td>" + (i+1) + "</td><td>" + playerHandles[i] + "</td></tr>");
