@@ -155,49 +155,16 @@ var uri = window.location.href;
 
       $("div.emoji-input").css({ width: "80%" });
 
-/*
-      $.getJSON(uri + "/get_phrase.json", function(data) {
-	  $("#phrase_entry").text(data.phrase);
-      });
-
-$("#sub_btn").click(function() {
-$.ajax({
-    type: 'POST',
-    url: uri + '/update_emoji',
-    data: JSON.stringify({emoji: $(".emoji-input").val()}),
-    contentType: "application/json",
-    dataType: 'json'
-});
-
-        $(this).text("waiting on other players...");
-
-
-
-
-        var x = setInterval(function() {
-                $.getJSON(uri + "/get_results.json", function(data) {
-                        if (data.finished) {
-                                clearInterval(x);
-                                $("#init_phrase").text('"' + data.phrase + '"');
-                                $("#emoj_phrase").html(EmojiPicker.prototype.unicodeToImage(data.emoji));
-                                $("#guess_phrase").text(data.text);
-				$("#j2").show();
-				$("#j1").hide();
-                        }
-                });
-        }, 1000);
-});
-
-*/
-
 var maxPlayers = 0;
 var currPlayers = 0;
 var refreshPlayers = true;
 var myId;
-var DELAY = 300;
-                $.getJSON(uri + "/get_maxPlayers.json", function(data) {
-			maxPlayers = data.maxPlayers;
-                });
+var DELAY = 800;
+
+$.getJSON(uri + "/get_maxPlayers.json", function(data) {
+	maxPlayers = data.maxPlayers;
+});
+
 function activateTurn(x) {
 	$("#j0").hide();
 	$("#jwait").hide();
@@ -223,13 +190,25 @@ function endTurn() {
 	}
 
 	$("#jwait").show();
+	pollTurn();
 }
 
-function endGame(x) {
+
+function endGame(x, phrase) {
+	var frag = "<div class='row'><h3>\"" + phrase + "\"</h3></div>";
+	for (var i = 0; i < x.length; i++) {
+		frag += "<div class='row'><h4><span class='glyphicon glyphicon-arrow-down'></span> (" + x[i].handle + ")</h4></div>";
+		if (i % 2 == 0) {
+			frag += "<div class='row'><h3>" + EmojiPicker.prototype.unicodeToImage(x[i].response) + "</h3></div>";
+		}
+		else {
+			frag += "<div class='row'><h3>\"" + x[i].response + "\"</h3></div>";
+		}
+	}
+
 	$("#jwait").hide();
-	$("#res").html(x.concat());
+	$("#j3").html(frag);
 	$("#j3").show();
-	
 }
 
 $("#sub_btn0").click(function() {
@@ -255,6 +234,9 @@ $("#sub_btn").click(function() {
 });
 
 $("#join").click(function() {
+	var $this = $(this);
+	if (!$this.attr("disabled")) {
+		$this.attr("disabled", true);
       $.ajax({
             type: 'POST',
             url: uri + '/join',
@@ -265,8 +247,8 @@ $("#join").click(function() {
 		myId = data.id;
                 $("#lobbytitle").html("You have joined the lobby as position #" + (myId+1) + ". The game will start once " + maxPlayers + " players join.");
         });
+	}
 });
-
                 $.getJSON(uri + "/get_maxPlayers.json", function(data) {
 			maxPlayers = data.maxPlayers;
 
@@ -274,7 +256,7 @@ $("#join").click(function() {
         
                 });
 
-        var refreshLobby = setInterval(function() {
+      function refreshLobby() {
             $.getJSON(uri + "/get_players.json", function(data) {
                 var playerHandles = data.players;
                 console.log(playerHandles);
@@ -282,53 +264,55 @@ $("#join").click(function() {
                     for (var i = currPlayers; i < playerHandles.length && i < maxPlayers; ++i) {
                         $("#lobbyrows").append("<tr><td>" + (i+1) + "</td><td>" + playerHandles[i] + "</td></tr>");
                     }
-
                     currPlayers = playerHandles.length > maxPlayers ? maxPlayers : playerHandles.length;
                 }
+		if (refreshPlayers) {
+			setTimeout(refreshLobby, DELAY);
+		}
             });
-        }, DELAY);
 
-/*
-        var x = setInterval(function() {
-                $.getJSON(uri + "/get_players.json", function(data) {
-			$("#players").html(data.players.concat());
-			if (!refreshPlayers) {
-				clearInterval(x);
-			}
-                });
-        }, DELAY);
-*/
-var wentAlready = false;
+        }
 
-        var y = setInterval(function() {
+	refreshLobby();
+
+
+        function pollTurn() {
                 $.getJSON(uri + "/get_turn.json", function(data) {
-			if (data.turn != -1) {
-				refreshPlayers = false;
+                        if (data.turn != -1) {
+				if (data.turn > 0) {
+					$("#lobbyrows > tr:eq( " + (data.turn - 1) + " )").removeClass("bg-primary");
+				}
+				if (data.turn < maxPlayers) {
+					$("#lobbyrows > tr:eq( " + data.turn + " )").addClass("bg-primary");
+				}
 			}
 
 			if (data.turn == myId) {
-                            if (!wentAlready) {
-                                wentAlready = true;
                 		$.getJSON(uri + "/get_response.json", {num: myId - 1}, function(data) {
 					activateTurn(data.response);
 				});
-                            }
+				refreshPlayers = false;
+				return;
 			}
 			else if (data.turn == maxPlayers) {
 		                $.getJSON(uri + "/get_results.json", function(data) {
-					endGame(data.results);
+					endGame(data.results, data.phrase);
 				});
-                                clearInterval(y);
+				return;
 			}
                         else if (data.turn != -1) {
-                            $("#j0").hide();
-                            $("#jwait").show();
+				refreshPlayers = false;
+                            	$("#j0").hide();
+                            	$("#jwait").show();
                         }
+
+			setTimeout(pollTurn, DELAY);
                 });
-        }, DELAY);
-
-
-});
+        }
+	
+	pollTurn();
+  
+  });
   </script>
   </body>
 
