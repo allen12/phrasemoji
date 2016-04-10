@@ -23,8 +23,8 @@
     <![endif]-->
   </head>
   <body>
-
-<div class="container">
+<section>
+<div class="container" id="mainwindow">
       <div class="header clearfix">
         <nav>
           <ul class="nav nav-pills pull-right">
@@ -98,6 +98,21 @@ results
 
     </div> <!-- /container -->
 
+<div class="container" id="lobby">
+    <h2> Players currently in lobby </h2>
+    <div class="table-responsive">
+        <table class="table">
+            <thead>
+                <tr>
+                    <th> @handle </th>
+                </tr>
+            </thead>
+            <tbody id="lobbyrows">
+            </tbody>
+        </table>
+    </div>
+</div>
+</section>
     <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
     <!-- Include all compiled plugins (below), or include individual files as needed -->
@@ -172,8 +187,10 @@ $.ajax({
 */
 
 var maxPlayers = 0;
+var currPlayers = 0;
 var refreshPlayers = true;
 var myId;
+var DELAY = 300;
                 $.getJSON(uri + "/get_maxPlayers.json", function(data) {
 			maxPlayers = data.maxPlayers;
                 });
@@ -247,7 +264,26 @@ $("#join").click(function() {
         });
 });
 
-/* ALLEN INSERT HERE */
+                $.getJSON(uri + "/get_maxPlayers.json", function(data) {
+			maxPlayers = data.maxPlayers;
+                });
+
+        
+        var refreshLobby = setInterval(function() {
+            $.getJSON(uri + "/get_players.json", function(data) {
+                var playerHandles = data.players;
+                console.log(playerHandles);
+                if (playerHandles.length > currPlayers) {
+                    for (var i = currPlayers; i < playerHandles.length && i < maxPlayers; ++i) {
+                        $("#lobbyrows").append("<tr><td>" + playerHandles[i] + "</td></tr>");
+                    }
+
+                    currPlayers = playerHandles.length > maxPlayers ? maxPlayers : playerHandles.length;
+                }
+            });
+        }, DELAY);
+
+/*
         var x = setInterval(function() {
                 $.getJSON(uri + "/get_players.json", function(data) {
 			$("#players").html(data.players.concat());
@@ -255,8 +291,8 @@ $("#join").click(function() {
 				clearInterval(x);
 			}
                 });
-        }, 1000);
-
+        }, DELAY);
+*/
 var wentAlready = false;
 
         var y = setInterval(function() {
@@ -284,7 +320,7 @@ var wentAlready = false;
                             $("#jwait").show();
                         }
                 });
-        }, 1000);
+        }, DELAY);
 
 
 });
