@@ -29,6 +29,20 @@ app.get("/", function(req, res) {
 
 //Actual game page
 app.get("/[a-z]{4}\\\\?", function(req, res) {
+<<<<<<< HEAD
+    res.sendFile("game.html", { root: __dirname + "/../frontend" });
+});
+
+app.get("/[a-z]{4}/get_response.json", function(req, res) {
+    game = get_url(req.url);
+    var id = req.query.id;
+    var ret = {};
+    if(id == -1) {
+        ret["response"] = gameStates[game]["phrase"];
+    } else {
+        ret["response"] = gameStates[game]["players"][id]["response"];
+    }
+=======
     var path = url.parse(req.url).pathname;
     var game = path.split("/")[1];
     if (gameStates[game]["first_entered"]) {
@@ -45,46 +59,91 @@ app.get("/[a-z]{4}/get_phrase.json", function(req, res) {
         "phrase" : gameStates[game]["phrase"]
     };
     gameStates[game]["first_entered"] = true;
+>>>>>>> 2e2007c1e5fb4409457ce30de7ac42c9e83cb7fc
     res.send(JSON.stringify(ret));
 });
 
-app.get("/[a-z]{4}/get_text.json", function(req, res) {
-    var path = url.parse(req.url).pathname;
-    var game = path.split("/")[1];
+app.get("/get_players", function(req, res) {
+    game = get_url(req.url);
+    var handles = [];
+    for(var p : gameStates[game]["players"]) {
+        handles.push(p["handle"]);
+    }
     var ret = {
-        "text" : gameStates[game]["text"]
+        "players" : handles;
     };
     res.send(JSON.stringify(ret));
 });
 
-app.get("/[a-z]{4}/get_emoji.json", function(req, res) {
-    var path = url.parse(req.url).pathname;
-    var game = path.split("/")[1];
+app.get("/[a-z]{4}/get_results.json", function(req, res) {
+    game = get_url(req.url);
     var ret = {
-        "emoji" : gameStates[game]["emoji"]
-    };
+        "results" : gameStates[game]["players"];
+    }
     res.send(JSON.stringify(ret));
+    gameStates[game]["turns"]--;
+    if(gameStates[game]["turns"] == 0){
+        removeGame(game); 
+    }
 });
 
+app.get("/[a-z]{4}/get_turn.json", function(req, res) {
+    game = get_url(req.url);
+    var ret = {
+        "turn" : gameStates[game]["turn"];
+    });
+    res.send(JSON.stringify(ret);
+});
+
+<<<<<<< HEAD
+app.get("/[a-z]{4}/get_maxPlayers", function(req, res) {
+    game = get_url(req.url);
+    
+});
+
+app.post("/request_room.json", function(req, res) {
+    var size = req.body.size;
+    var url = getRandomURL();
+    gameStates[url] = {};
+    gameStates[url]["phrase"] = getRandomPhrase();
+    gameStates[url]["finished"] = false;
+    gameStates[url]["size"] = size;
+=======
 app.get("/request_room.json", function(req, res) {
     var id = getRandomURL();
     gameStates[id] = {};
     gameStates[id]["phrase"] = getRandomPhrase();
     gameStates[id]["finished"] = false;
     gameStates[id]["first_entered"] = false;
+>>>>>>> 2e2007c1e5fb4409457ce30de7ac42c9e83cb7fc
     console.log(JSON.stringify(gameStates));
     var ret = {
-        "id" : id
+        "url" : url
     };
     res.send(JSON.stringify(ret));
 });
 
-app.get("/[a-z]{4}/get_results.json", function(req, res) {
-    var path = url.parse(req.url).pathname;
-    var game = path.split("/")[1];
-    res.send(JSON.stringify(gameStates[game]));
+app.post("/[a-z]{4}/join", function(req, res) {
+    game = get_url(req.url);
+    var handle = req.body.handle;
+    gameStates[game]["players"]["handle"] = handle;
+    var ret = {
+        "id" : gameStates[game]["num_players"];
+    });
+    res.send(ret);
+    gameStates[game]["num_players"]++;
+    
+    if(gameStates[game]["num_players"] == 1) {
+        start();
+    }
 });
 
+<<<<<<< HEAD
+app.post("/[a-z]{4}/send_response", function(req, res) {
+    var id = gameStates[game]["turn"];
+    gameStates[game]["players"][id]["response"] = req.body.response;
+    gameStates[game]["turn"]++;
+=======
 app.post("/[a-z]{4}/update_emoji", function(req, res) {
     var path = url.parse(req.url).pathname;
 console.log(req);
@@ -95,19 +154,22 @@ console.log(res);
     gameStates[game]["emoji"] = req.body.emoji;
     console.log(JSON.stringify(gameStates));
     res.send("Emoji updated\n");
+>>>>>>> 2e2007c1e5fb4409457ce30de7ac42c9e83cb7fc
 });
 
-app.post("/[a-z]{4}/update_text", function(req, res) {
-    var path = url.parse(req.url).pathname;
-    console.log("update text from url: %s", path);
-    var game = path.split("/")[1];
-    console.log("game ID: %s", game);
-    gameStates[game]["text"] = req.body.text;
-    gameStates[game]["finished"] = true;
-    console.log(JSON.stringify(gameStates));
-    res.send("Text updated\n");
-});
+var start = function() {
+    turn = 0;
+}
 
+var removeGame = function(game) {
+    gameStates[game] = null;
+    delete gameStates[game];
+}
+
+var get_url = function(x) {
+    var path = url.parse(x).pathname;
+    return path.split("/")[1];
+}
 /*
  * Obtain a random string of four lowercase alpha characters.
  * Use intended for URL generation for a room.
