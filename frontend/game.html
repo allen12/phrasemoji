@@ -136,6 +136,10 @@ results
     $(function() {
 var uri = window.location.href;
 
+	$(window).bind("beforeunload", function() {
+	    return 'Abandoning may discontinue the game for all players. Are you sure?';
+	});
+
       // Initializes and creates emoji set from sprite sheet
       window.emojiPicker = new EmojiPicker({
         emojiable_selector: '[data-emojiable=true]',
@@ -210,6 +214,7 @@ function endGame(x, phrase) {
 	$("#jwait").hide();
 	$("#j3").html(frag);
 	$("#j3").show();
+	$(window).unbind("beforeunload");
 }
 
 $("#sub_btn0").click(function() {
@@ -289,11 +294,13 @@ $("#join").click(function() {
         function pollTurn() {
                 $.getJSON(uri + "/get_turn.json", function(data) {
                         if (data.turn != -1) {
-				if (data.turn > 0) {
-					$("#lobbyrows > tr:eq( " + (data.turn - 1) + " )").removeClass("bg-primary");
-				}
-				if (data.turn < maxPlayers) {
-					$("#lobbyrows > tr:eq( " + data.turn + " )").addClass("bg-primary");
+				for (var i = 0; i < maxPlayers; i++) {
+					if (i == data.turn) {
+						$("#lobbyrows > tr:eq( " + i + " )").addClass("bg-primary");
+					}
+					else {
+						$("#lobbyrows > tr:eq( " + i + " )").removeClass("bg-primary");
+					}
 				}
 			}
 
