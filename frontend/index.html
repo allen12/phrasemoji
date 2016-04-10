@@ -33,7 +33,11 @@
       <div class="jumbotron">
         <!--<h1>create room</h1> -->
         <!-- <p class="lead"><input type="text" /></p> -->
-        <p><a id="create_room" class="btn btn-lg btn-success" href="#" role="button">create room</a></p>
+        <p>
+number of players
+           <input id="player_num" type="text" >
+<a id="create_room" class="btn btn-lg btn-success" role="button">create room</a>
+</p>
         <p>
          <div id="room_group" class="input-group">
            <input id="room_id" type="text" class="form-control" placeholder="Search for...">
@@ -55,6 +59,36 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
     <!-- Include all compiled plugins (below), or include individual files as needed -->
     <script src="js/bootstrap.min.js"></script>
-    <script src="js/script.js"></script>
+<script>
+
+var uri = window.location.href;
+
+$("#create_room").click(function() {
+        var $this = $(this);
+        if (!$this.attr("disabled")) {
+                $this.text("waiting...");
+
+		$.ajax({
+		    type: 'POST',
+		    url: 'request_room.json',
+		    data: JSON.stringify({size: $("#player_num").val()}),
+		    contentType: "application/json",
+		    dataType: 'json'
+		}).done(function(data) {
+                        if (data.url) {
+                                $this.text("ready!");
+                                $this.attr("disabled", true);
+                                $("#room_id").val("http://phrasemoji.com/" + data.url);
+                                $("#room_group").css({ display: "table" });
+                        }
+                });
+        }
+});
+
+$("#go").click(function() {
+        window.location.href = $("#room_id").val();
+});
+
+</script>
   </body>
 </html>

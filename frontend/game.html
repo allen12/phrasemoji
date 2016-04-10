@@ -34,7 +34,20 @@
         <h3><span class="text-muted">phras</span><b>emoji</b></h3>
       </div>
 
-      <div id="j1" class="jumbotron">
+      <div id="j0" class="jumbotron">
+lobby 
+  <input id="handle" type="text" class="form-control" />
+<button id="join" class="btn btn-default" type="button" style="height: 50px;">join</button>
+<ul id="players"></ul>
+
+      </div>
+
+      <div hidden id="jwait" class="jumbotron">
+waiting
+
+      </div>
+
+      <div hidden id="j1" class="jumbotron">
 <p>
 	<h4>translate</h4>
         <p><h3 id="phrase_entry"></h3></p>
@@ -55,6 +68,21 @@
       </div>
 
       <div hidden id="j2" class="jumbotron">
+<p>
+        <h4>translate</h4>
+        <p><h3 id="emo_phrase"></h3></p>
+        <h4>into english</h4>
+</p>
+<br />
+<div class="input-group">
+  <input id="entry" type="text" class="form-control" />
+  <button id="sub_btn" type="button" class="btn btn-default navbar-btn">Submit</button>
+</div>
+
+      </div>
+
+      <div hidden id="j3" class="jumbotron">
+results
 <p>
 	<h4>the phrase was</h4>
         <p><h3 id="init_phrase"></h3></p>
@@ -83,7 +111,6 @@
   <script src="lib/js/util.js"></script>
   <script src="lib/js/jquery.emojiarea.js"></script>
   <script src="lib/js/emoji-picker.js"></script>
-    <script src="js/script.js"></script>
   <!-- End emoji-picker JavaScript -->
   <script>
     $(function() {
@@ -100,8 +127,16 @@ var uri = window.location.href;
       // It can be called as many times as necessary; previously converted input fields will not be converted again
       window.emojiPicker.discover();
 
+
+	$("#btn-back").click(function() {
+	        $("textarea.emoji-input").val($("textarea.emoji-input").val().slice(0, -1));
+	        $("div.emoji-input").children().last().remove();
+	});
+	
+
       $("div.emoji-input").css({ width: "80%" });
 
+/*
       $.getJSON(uri + "/get_phrase.json", function(data) {
 	  $("#phrase_entry").text(data.phrase);
       });
@@ -116,6 +151,10 @@ $.ajax({
 });
 
         $(this).text("waiting on other players...");
+
+
+
+
         var x = setInterval(function() {
                 $.getJSON(uri + "/get_results.json", function(data) {
                         if (data.finished) {
@@ -129,6 +168,102 @@ $.ajax({
                 });
         }, 1000);
 });
+
+*/
+
+var maxPlayers = 0;
+var refreshPlayers = true;
+var myId;
+
+function activateTurn(x) {
+	$("#jwait").hide();
+
+	/* phrase to emoji */
+	if (myId % 2 == 0) {
+                $("#emoj_entry").html(EmojiPicker.prototype.unicodeToImage(x));
+		$("#j1").show();
+	}
+	else {
+                $("#emoj_phrase").html(x);
+		$("#j2").show();
+	}
+}
+
+function endTurn() {
+	/* phrase to emoji */
+	if (myId % 2 == 0) {
+		$("#j1").hide();
+	}
+	else {
+		$("#j2").hide();
+	}
+
+	$("#jwait").show();
+}
+
+function endGame(x) {
+	$("#jwait").hide();
+	$("#res").html(x.concat());
+	$("#j3").show();
+	
+}
+
+$("#sub_btn").click(function() {
+	$.ajax({
+	    type: 'POST',
+	    url: uri + '/send_response',
+	    data: JSON.stringify({response: $(".emoji-input").val()}),
+	    contentType: "application/json",
+	    dataType: 'json'
+	});
+	endTurn();
+});
+
+$("#join").click(function() {
+      $.ajax({
+            type: 'POST',
+            url: uri + '/join',
+            data: JSON.stringify({handle: $("#handle").val()}),
+            contentType: "application/json",
+            dataType: 'json'
+        }).done(function(data) {
+		myId = data.id;
+        });
+});
+
+                $.getJSON(uri + "/get_maxPlayers.json", function(data) {
+			maxPlayers = data.maxPlayers;
+                });
+
+/* ALLEN INSERT HERE */
+        var x = setInterval(function() {
+                $.getJSON(uri + "/get_players.json", function(data) {
+			$("#players").html(data.players.concat());
+			if (!refreshPlayers) {
+				clearInterval(x);
+			}
+                });
+        }, 2000);
+
+        var y = setInterval(function() {
+                $.getJSON(uri + "/get_turn.json", function(data) {
+			if (data.turn == -1) {
+				refreshPlayers = false;
+			}
+
+			if (data.turn == myId) {
+                		$.getJSON(uri + "/get_response.json", {num: myId - 1}, function(data) {
+					activateTurn(data.response);
+				});
+			}
+
+			if (data.turn == maxPlayers + 1) {
+		                $.getJSON(uri + "/get_results.json", function(data) {
+					endGame(data.results);
+				});
+			}
+                });
+        }, 2000);
 
 
 });
