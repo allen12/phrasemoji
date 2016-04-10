@@ -218,8 +218,9 @@ $("#sub_btn0").click(function() {
 	    data: JSON.stringify({response: $("#plain_entry").val()}),
 	    contentType: "application/json",
 	    dataType: 'json'
+	}).done(function() {
+		endTurn();
 	});
-	endTurn();
 });
 
 $("#sub_btn").click(function() {
@@ -229,8 +230,9 @@ $("#sub_btn").click(function() {
 	    data: JSON.stringify({response: $(".emoji-input").val()}),
 	    contentType: "application/json",
 	    dataType: 'json'
+	}).done(function() {
+		endTurn();
 	});
-	endTurn();
 });
 
 $("#join").click(function() {
