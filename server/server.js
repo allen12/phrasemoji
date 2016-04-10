@@ -29,48 +29,29 @@ app.get("/", function(req, res) {
 
 //Actual game page
 app.get("/[a-z]{4}\\\\?", function(req, res) {
-<<<<<<< HEAD
     res.sendFile("game.html", { root: __dirname + "/../frontend" });
 });
 
 app.get("/[a-z]{4}/get_response.json", function(req, res) {
     game = get_url(req.url);
-    var id = req.query.id;
+    var id = req.query.num;
     var ret = {};
     if(id == -1) {
         ret["response"] = gameStates[game]["phrase"];
     } else {
         ret["response"] = gameStates[game]["players"][id]["response"];
     }
-=======
-    var path = url.parse(req.url).pathname;
-    var game = path.split("/")[1];
-    if (gameStates[game]["first_entered"]) {
-    	res.sendFile("test2.html", { root: __dirname + "/../frontend" });
-    } else {
-    	res.sendFile("test.html", { root: __dirname + "/../frontend" });
-    }
-});
-
-app.get("/[a-z]{4}/get_phrase.json", function(req, res) {
-    var path = url.parse(req.url).pathname;
-    var game = path.split("/")[1];
-    var ret = {
-        "phrase" : gameStates[game]["phrase"]
-    };
-    gameStates[game]["first_entered"] = true;
->>>>>>> 2e2007c1e5fb4409457ce30de7ac42c9e83cb7fc
     res.send(JSON.stringify(ret));
 });
 
-app.get("/get_players", function(req, res) {
+app.get("/[a-z]{4}/get_players.json", function(req, res) {
     game = get_url(req.url);
     var handles = [];
-    for(var p : gameStates[game]["players"]) {
+    gameStates[game]["players"].forEach(function(p) {
         handles.push(p["handle"]);
-    }
+    });
     var ret = {
-        "players" : handles;
+        "players" : handles
     };
     res.send(JSON.stringify(ret));
 });
@@ -78,7 +59,7 @@ app.get("/get_players", function(req, res) {
 app.get("/[a-z]{4}/get_results.json", function(req, res) {
     game = get_url(req.url);
     var ret = {
-        "results" : gameStates[game]["players"];
+        "results" : gameStates[game]["players"]
     }
     res.send(JSON.stringify(ret));
     gameStates[game]["turns"]--;
@@ -90,32 +71,29 @@ app.get("/[a-z]{4}/get_results.json", function(req, res) {
 app.get("/[a-z]{4}/get_turn.json", function(req, res) {
     game = get_url(req.url);
     var ret = {
-        "turn" : gameStates[game]["turn"];
-    });
-    res.send(JSON.stringify(ret);
+        "turn" : gameStates[game]["turn"]
+    };
+    res.send(JSON.stringify(ret));
 });
 
-<<<<<<< HEAD
-app.get("/[a-z]{4}/get_maxPlayers", function(req, res) {
+app.get("/[a-z]{4}/get_maxPlayers.json", function(req, res) {
     game = get_url(req.url);
-    
+    var ret = {
+        "maxPlayers" : gameStates[game]["size"]
+    };
+    res.send(JSON.stringify(ret));
 });
 
 app.post("/request_room.json", function(req, res) {
     var size = req.body.size;
     var url = getRandomURL();
     gameStates[url] = {};
+    gameStates[url]["turn"] = -1;
     gameStates[url]["phrase"] = getRandomPhrase();
     gameStates[url]["finished"] = false;
     gameStates[url]["size"] = size;
-=======
-app.get("/request_room.json", function(req, res) {
-    var id = getRandomURL();
-    gameStates[id] = {};
-    gameStates[id]["phrase"] = getRandomPhrase();
-    gameStates[id]["finished"] = false;
-    gameStates[id]["first_entered"] = false;
->>>>>>> 2e2007c1e5fb4409457ce30de7ac42c9e83cb7fc
+    gameStates[url]["num_players"] = 0;
+    gameStates[url].players = [];
     console.log(JSON.stringify(gameStates));
     var ret = {
         "url" : url
@@ -126,40 +104,24 @@ app.get("/request_room.json", function(req, res) {
 app.post("/[a-z]{4}/join", function(req, res) {
     game = get_url(req.url);
     var handle = req.body.handle;
-    gameStates[game]["players"]["handle"] = handle;
+    var id = gameStates[game]["num_players"];
+    gameStates[game]["players"][id] = {"handle" : handle};
     var ret = {
-        "id" : gameStates[game]["num_players"];
-    });
-    res.send(ret);
+        "id" : id
+    };
+    res.send(ret)
     gameStates[game]["num_players"]++;
     
-    if(gameStates[game]["num_players"] == 1) {
-        start();
+    if(gameStates[game]["num_players"] == gameStates[game]["size"]) {
+        gameStates[game]["turn"] = 0;
     }
 });
 
-<<<<<<< HEAD
 app.post("/[a-z]{4}/send_response", function(req, res) {
     var id = gameStates[game]["turn"];
     gameStates[game]["players"][id]["response"] = req.body.response;
     gameStates[game]["turn"]++;
-=======
-app.post("/[a-z]{4}/update_emoji", function(req, res) {
-    var path = url.parse(req.url).pathname;
-console.log(req);
-console.log(res);
-    console.log("update emoji from url: %s with ", path, req.body.emoji);
-    var game = path.split("/")[1];
-    console.log("game ID: %s", game);
-    gameStates[game]["emoji"] = req.body.emoji;
-    console.log(JSON.stringify(gameStates));
-    res.send("Emoji updated\n");
->>>>>>> 2e2007c1e5fb4409457ce30de7ac42c9e83cb7fc
 });
-
-var start = function() {
-    turn = 0;
-}
 
 var removeGame = function(game) {
     gameStates[game] = null;

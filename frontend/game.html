@@ -75,8 +75,8 @@ waiting
 </p>
 <br />
 <div class="input-group">
-  <input id="entry" type="text" class="form-control" />
-  <button id="sub_btn" type="button" class="btn btn-default navbar-btn">Submit</button>
+  <input id="plain_entry" type="text" class="form-control" />
+  <button id="sub_btn0" type="button" class="btn btn-default navbar-btn">Submit</button>
 </div>
 
       </div>
@@ -174,17 +174,22 @@ $.ajax({
 var maxPlayers = 0;
 var refreshPlayers = true;
 var myId;
+                $.getJSON(uri + "/get_maxPlayers.json", function(data) {
+			maxPlayers = data.maxPlayers;
+                });
+
 
 function activateTurn(x) {
+	$("#j0").hide();
 	$("#jwait").hide();
 
 	/* phrase to emoji */
 	if (myId % 2 == 0) {
-                $("#emoj_entry").html(EmojiPicker.prototype.unicodeToImage(x));
+                $("#phrase_entry").html(x);
 		$("#j1").show();
 	}
 	else {
-                $("#emoj_phrase").html(x);
+                $("#emo_phrase").html(EmojiPicker.prototype.unicodeToImage(x));
 		$("#j2").show();
 	}
 }
@@ -207,6 +212,17 @@ function endGame(x) {
 	$("#j3").show();
 	
 }
+
+$("#sub_btn0").click(function() {
+	$.ajax({
+	    type: 'POST',
+	    url: uri + '/send_response',
+	    data: JSON.stringify({response: $("#plain_entry").val()}),
+	    contentType: "application/json",
+	    dataType: 'json'
+	});
+	endTurn();
+});
 
 $("#sub_btn").click(function() {
 	$.ajax({
@@ -231,10 +247,6 @@ $("#join").click(function() {
         });
 });
 
-                $.getJSON(uri + "/get_maxPlayers.json", function(data) {
-			maxPlayers = data.maxPlayers;
-                });
-
 /* ALLEN INSERT HERE */
         var x = setInterval(function() {
                 $.getJSON(uri + "/get_players.json", function(data) {
@@ -243,27 +255,36 @@ $("#join").click(function() {
 				clearInterval(x);
 			}
                 });
-        }, 2000);
+        }, 1000);
+
+var wentAlready = false;
 
         var y = setInterval(function() {
                 $.getJSON(uri + "/get_turn.json", function(data) {
-			if (data.turn == -1) {
+			if (data.turn != -1) {
 				refreshPlayers = false;
 			}
 
 			if (data.turn == myId) {
+                            if (!wentAlready) {
+                                wentAlready = true;
                 		$.getJSON(uri + "/get_response.json", {num: myId - 1}, function(data) {
 					activateTurn(data.response);
 				});
+                            }
 			}
-
-			if (data.turn == maxPlayers + 1) {
+			else if (data.turn == maxPlayers) {
 		                $.getJSON(uri + "/get_results.json", function(data) {
 					endGame(data.results);
 				});
+                                clearInterval(y);
 			}
+                        else if (data.turn != -1) {
+                            $("#j0").hide();
+                            $("#jwait").show();
+                        }
                 });
-        }, 2000);
+        }, 1000);
 
 
 });
