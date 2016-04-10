@@ -36,14 +36,18 @@
 <div class="row">
       <div id="j0" class="col-md-8 jumbotron">
     <p id="lobbytitle"> </p>
-    <input id="handle" type="text" class="form-control" />
-<button id="join" class="btn btn-default" type="button" style="height: 50px;">join</button>
+         <div class="input-group">
+    		<input id="handle" type="text" class="form-control" />
+           <span class="input-group-btn">
+	   <button id="join" class="btn btn-default" type="button" >Join</button>
+           </span>
+         </div>
 <ul id="players"></ul>
 
       </div>
 
       <div hidden id="jwait" class="col-md-8 jumbotron">
-waiting
+<h3> waiting on others players <img src="lib/img//blank.gif" class="img" style="display:inline-block;width:25px;height:25px;background:url('lib/img//emoji_spritesheet_2.png') -325px -25px no-repeat;background-size:825px 175px;" alt=":hourglass_flowing_sand:"> </h3>
 
       </div>
 
@@ -63,7 +67,7 @@ waiting
 	        <button id="nom" class="btn btn-default" type="button"><span style="font-size: 25px;">&#x263A;</span></button>
 	  </div>
         </div>
-  <button id="sub_btn" type="button" class="btn btn-default navbar-btn">Submit</button>
+<a id="sub_btn" class="btn btn-lg btn-success" role="button">submit</a>
       </div>
       </div>
 
@@ -76,8 +80,9 @@ waiting
 <br />
 <div class="input-group">
   <input id="plain_entry" type="text" class="form-control" />
-  <button id="sub_btn0" type="button" class="btn btn-default navbar-btn">Submit</button>
 </div>
+<br />
+<a id="sub_btn0" class="btn btn-lg btn-success" role="button">submit</a>
 
       </div>
 
@@ -94,13 +99,13 @@ results
 </div>
 
     <div class="col-md-4" id="lobby">
-    <h4><b> Currently in lobby:</b> </h4>
+    <h4><b> Currently in Lobby</b> </h4>
     <div class="table-responsive">
         <table class="table">
             <thead>
                 <tr>
                     <th> Position </th>
-                    <th> @handle </th>
+                    <th> Name </th>
                 </tr>
             </thead>
             <tbody id="lobbyrows">
@@ -202,12 +207,12 @@ function endTurn() {
 function endGame(x, phrase) {
 	var frag = "<div class='row'><h3>\"" + phrase + "\"</h3></div>";
 	for (var i = 0; i < x.length; i++) {
-		frag += "<div class='row'><h4><span class='glyphicon glyphicon-arrow-down'></span> (" + x[i].handle + ")</h4></div>";
+		frag += "<div class='row'><h4><span class='glyphicon glyphicon-arrow-down'></span> <span class='text-muted'>" + x[i].handle + "</span></h4></div>";
 		if (i % 2 == 0) {
-			frag += "<div class='row'><h3>" + EmojiPicker.prototype.unicodeToImage(x[i].response) + "</h3></div>";
+			frag += "<div class='row'><h3 style='margin-top: 6px;'>" + EmojiPicker.prototype.unicodeToImage(x[i].response) + "</h3></div>";
 		}
 		else {
-			frag += "<div class='row'><h3>\"" + x[i].response + "\"</h3></div>";
+			frag += "<div class='row'><h3>&ldquo;" + x[i].response + "&rdquo;</h3></div>";
 		}
 	}
 
@@ -268,7 +273,7 @@ $("#join").click(function() {
                 $.getJSON(uri + "/get_maxPlayers.json", function(data) {
 			maxPlayers = data.maxPlayers;
 
-                    $("#lobbytitle").html("You have not joined the lobby yet. Enter a @handle below to join. The game will start once " + maxPlayers + " players join.");
+                    $("#lobbytitle").html("You have not joined the lobby yet. Enter a name below to join. The game will start once " + maxPlayers + " players join.");
         
                 });
 
