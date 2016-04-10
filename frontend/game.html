@@ -207,7 +207,7 @@ function endTurn() {
 function endGame(x, phrase) {
 	var frag = "<div class='row'><h3>\"" + phrase + "\"</h3></div>";
 	for (var i = 0; i < x.length; i++) {
-		frag += "<div class='row'><h4><span class='glyphicon glyphicon-arrow-down'></span> <span class='text-muted'>" + x[i].handle + "</span></h4></div>";
+		frag += "<div class='row'><h4><span class='glyphicon glyphicon-arrow-down'></span> <span class='text-muted'>" + x[i].handle + "</span><span class='glyphicon glyphicon-arrow-down'></span></h4></div>";
 		if (i % 2 == 0) {
 			frag += "<div class='row'><h3 style='margin-top: 6px;'>" + EmojiPicker.prototype.unicodeToImage(x[i].response) + "</h3></div>";
 		}
