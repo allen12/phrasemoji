@@ -27,7 +27,9 @@ var phrases = ["There's no such thing as a free lunch",
 "The grass is always greener on the other side",
 "You cannot open a book without learning",
 "Silence is a friend who never betrays",
-"When anger rises, think of the consequences",]
+"When anger rises, think of the consequences",
+"It's raining cats and dogs"
+]
 
 var gameStates = {};
 app.use(bodyParser.json());
