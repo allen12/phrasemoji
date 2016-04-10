@@ -23,7 +23,6 @@
     <![endif]-->
   </head>
   <body>
-
 <div class="container">
       <div class="header clearfix">
         <nav>
@@ -33,8 +32,8 @@
         </nav>
         <h3><span class="text-muted">phras</span><b>emoji</b></h3>
       </div>
-
-      <div id="j0" class="jumbotron">
+<div class="row">
+      <div id="j0" class="col-md-8 jumbotron">
 lobby 
   <input id="handle" type="text" class="form-control" />
 <button id="join" class="btn btn-default" type="button" style="height: 50px;">join</button>
@@ -42,12 +41,12 @@ lobby
 
       </div>
 
-      <div hidden id="jwait" class="jumbotron">
+      <div hidden id="jwait" class="col-md-8 jumbotron">
 waiting
 
       </div>
 
-      <div hidden id="j1" class="jumbotron">
+      <div hidden id="j1" class="col-md-8 jumbotron">
 <p>
 	<h4>translate</h4>
         <p><h3 id="phrase_entry"></h3></p>
@@ -67,7 +66,7 @@ waiting
       </div>
       </div>
 
-      <div hidden id="j2" class="jumbotron">
+      <div hidden id="j2" class="col-md-8 jumbotron">
 <p>
         <h4>translate</h4>
         <p><h3 id="emo_phrase"></h3></p>
@@ -81,7 +80,7 @@ waiting
 
       </div>
 
-      <div hidden id="j3" class="jumbotron">
+      <div hidden id="j3" class="col-md-8 jumbotron">
 results
 <p>
 	<h4>the phrase was</h4>
@@ -92,11 +91,31 @@ results
         <p><h3 id="guess_phrase"></h3></p>
 </p>
 </div>
+
+    <div class="col-md-4" id="lobby">
+    <h4><b> Currently in lobby:</b> </h4>
+    <div class="table-responsive">
+        <table class="table">
+            <thead>
+                <tr>
+                    <th> Position </th>
+                    <th> @handle </th>
+                </tr>
+            </thead>
+            <tbody id="lobbyrows">
+            </tbody>
+        </table>
+    </div>
+</div>
+</div>
+
+
       <footer class="footer">
         <p>made at <img src="lib/img//blank.gif" class="img" style="margin-bottom:8px;display:inline-block;width:25px;height:25px;background:url('lib/img//emoji_spritesheet_0.png') -225px -75px no-repeat;background-size:675px 175px;" alt=":fire:"> by <img src="lib/img//blank.gif" class="img" style="display:inline-block;width:25px;height:25px;background:url('lib/img//emoji_spritesheet_1.png') -675px 0px no-repeat;background-size:725px 100px; margin-bottom: 7px;" alt=":turtle:">s allen, nick, and cameron</p>
       </footer>
 
     </div> <!-- /container -->
+
 
     <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
@@ -172,8 +191,10 @@ $.ajax({
 */
 
 var maxPlayers = 0;
+var currPlayers = 0;
 var refreshPlayers = true;
 var myId;
+var DELAY = 300;
                 $.getJSON(uri + "/get_maxPlayers.json", function(data) {
 			maxPlayers = data.maxPlayers;
                 });
@@ -247,7 +268,26 @@ $("#join").click(function() {
         });
 });
 
-/* ALLEN INSERT HERE */
+                $.getJSON(uri + "/get_maxPlayers.json", function(data) {
+			maxPlayers = data.maxPlayers;
+                });
+
+        
+        var refreshLobby = setInterval(function() {
+            $.getJSON(uri + "/get_players.json", function(data) {
+                var playerHandles = data.players;
+                console.log(playerHandles);
+                if (playerHandles.length > currPlayers) {
+                    for (var i = currPlayers; i < playerHandles.length && i < maxPlayers; ++i) {
+                        $("#lobbyrows").append("<tr><td>" + (i+1) + "</td><td>" + playerHandles[i] + "</td></tr>");
+                    }
+
+                    currPlayers = playerHandles.length > maxPlayers ? maxPlayers : playerHandles.length;
+                }
+            });
+        }, DELAY);
+
+/*
         var x = setInterval(function() {
                 $.getJSON(uri + "/get_players.json", function(data) {
 			$("#players").html(data.players.concat());
@@ -255,8 +295,8 @@ $("#join").click(function() {
 				clearInterval(x);
 			}
                 });
-        }, 1000);
-
+        }, DELAY);
+*/
 var wentAlready = false;
 
         var y = setInterval(function() {
@@ -284,7 +324,7 @@ var wentAlready = false;
                             $("#jwait").show();
                         }
                 });
-        }, 1000);
+        }, DELAY);
 
 
 });

@@ -22,6 +22,10 @@ var gameStates = {};
 app.use(bodyParser.json());
 app.use(express.static(path.resolve("../frontend")));
 
+app.get("/about", function(req, res) {
+    res.sendFile("about.html", { root: __dirname + "/../frontend" });
+});
+
 //Actual game page
 app.get("/[a-z]{4}\\\\?", function(req, res) {
     game = get_url(req.url);
