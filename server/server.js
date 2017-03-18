@@ -33,7 +33,7 @@ var phrases = ["There's no such thing as a free lunch",
 
 var gameStates = {};
 app.use(bodyParser.json());
-app.use(express.static(path.resolve("../frontend")));
+app.use(express.static(path.resolve(path.join(__dirname, "../frontend"))));
 
 app.get("/about", function(req, res) {
     res.sendFile("about.html", { root: __dirname + "/../frontend" });
